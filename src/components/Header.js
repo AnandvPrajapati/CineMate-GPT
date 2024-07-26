@@ -1,12 +1,43 @@
+import { signOut } from "firebase/auth";
 import React from "react";
+import { auth } from "../utils/firebase";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Header = () => {
+  const navigate = useNavigate();
+  const user = useSelector((store) => store.user);
+  const handleSignOut = () => {
+    signOut(auth)
+      .then(() => {
+        navigate("/");
+      })
+      .catch((error) => {
+        navigate("/error");
+      });
+  };
   return (
-    <div className="absolute bg-gradient-to-t from-black">
+    <div className="absolute w-screen bg-gradient-to-b from-black px-16 py-2 z-10 flex justify-between">
       <img
-        src="https://assets.nflxext.com/ffe/siteui/vlv3/655a9668-b002-4262-8afb-cf71e45d1956/5ff265b6-3037-44b2-b071-e81750b21783/IN-en-20240715-POP_SIGNUP_TWO_WEEKS-perspective_WEB_c6d6616f-4478-4ac2-bdac-f54b444771dd_large.jpg"
-        alt="Background-image"
+        className="w-52"
+        src="https://www.logomaker.com/api/main/images/1j+ojlxEOMkX9Wyqfhe43D6kh...GJqxFGkB3JwWJqZ0Mwi3oR4URYkK5p+Ot+dERBpAQGghMNc889jyF8Vg=="
+        alt="Logo"
       />
+      {user && (
+        <div className="flex">
+          <img
+            className="my-auto w-10 h-10"
+            alt="userLogo"
+            src={user?.photoURL}
+          />
+          <button
+            onClick={handleSignOut}
+            className="bg-red-600 rounded-lg h-10 my-auto mx-2 p-2 text-white"
+          >
+            Sign Out
+          </button>
+        </div>
+      )}
     </div>
   );
 };
